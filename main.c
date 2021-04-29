@@ -25,7 +25,7 @@ double f3_(double x) {
 	return cos(x);
 }
 
-void STEP(double (*f)(double), double (*g)(double), double (*f_)(double), double (*g_)(double), double *a, double *b) {
+void Step(double (*f)(double), double (*g)(double), double (*f_)(double), double (*g_)(double), double *a, double *b) {
 	int f1 = 0, f2 = 0;
 	if (f(*a) - g(*a) < f(*b) - g(*b)) {
 		f1 = 1;
@@ -47,7 +47,7 @@ void STEP(double (*f)(double), double (*g)(double), double (*f_)(double), double
 
 double root(double (*f)(double), double (*g)(double), double (*f_)(double), double (*g_)(double), double a, double b, double eps) {
 	for (int n = 1;; ++n) {
-		STEP(f, g, f_, g_, &a, &b);
+		Step(f, g, f_, g_, &a, &b);
 		if (fabs(a - b) <= eps) {
 			break;
 		}
@@ -58,9 +58,9 @@ double root(double (*f)(double), double (*g)(double), double (*f_)(double), doub
 double simpson(double (*f)(double), double a, double b, int n) {
 	const double width = (b - a) / n;
 	double simpson_integral = 0;
-	for (int step = 0; step < n; ++step) {
-		const double x1 = a + step * width;
-		const double x2 = a + (step + 1) * width;
+	for (int Step = 0; Step < n; ++Step) {
+		const double x1 = a + Step * width;
+		const double x2 = a + (Step + 1) * width;
 		simpson_integral += (x2 - x1) / 6.0 * (f(x1) + 4.0 * f(0.5 * (x1 + x2)) + f(x2));
 	}
 	return simpson_integral;
