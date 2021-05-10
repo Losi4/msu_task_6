@@ -115,7 +115,7 @@ int main(int argc, char **argv)
             if (strcmp(argv[i], "-help") == 0)
             {
                 printf("HELP\n");
-                printf("-points  -  print all intersections\n-iterations  -  print number of interations\n-test-integral  -  User input: number of function(1,2,3), segment [a,b](input a, input b), epsilon; after input print value of this integral\n-test-root  -  User input: number of first function(1,2,3), number of second function(1,2,3), segment [a,b](input a, input b), epsilon; after input print value of root\n\n");
+                printf("-points  -  print all intersections\n-iterations  -  print number of iterations\n-test-integral  -  User input: number of function {1, 2, 3}, segment [a,b] (input a, input b), epsilon; after input print value of this integral\n-test-root  -  User input: number of first function {1, 2, 3}, number of second function {1, 2, 3}, segment [a,b] (input a, input b), epsilon; after input print value of root\n\n");
                 return 0;
             }
             else if(strcmp("-points", argv[i]) == 0)
