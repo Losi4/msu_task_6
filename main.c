@@ -129,15 +129,16 @@ double simpson(double (*f)(double), double a, double b, int n)
 
 double integral(double (*f)(double), double a, double b, double eps)
 {
-	for (int n = 1;; ++n)
+    double s1 = simpson(f, a, b, 1);
+	for (int n = 2;; n *= 2)
     {
-		double s1 = simpson(f, a, b, n);
-		double s2 = simpson(f, a, b, 2 * n);
+		double s2 = simpson(f, a, b, n);
 		double dif = fabs(s2 - s1) / 15.0;
 		if (dif < eps)
 		{
 			return s2;
 		}
+		s1 = s2;
 	}
 	return 0;
 }
