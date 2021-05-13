@@ -9,7 +9,9 @@ extern double f3(double);
 extern double f1_(double);
 extern double f2_(double);
 extern double f3_(double);
-int N;
+
+int N = 0;
+const double EPS = 1e-5;
 
 double tf0 (double x)
 {
@@ -116,10 +118,10 @@ double simpson(double (*f)(double), double a, double b, int n)
 {
 	const double width = (b - a) / n;
 	double simpson_integral = 0;
-	for (int Step = 0; Step < n; ++Step)
+	for (int step = 0; step < n; ++step)
     {
-		const double x1 = a + Step * width;
-		const double x2 = a + (Step + 1) * width;
+		const double x1 = a + step * width;
+		const double x2 = a + (step + 1) * width;
 		simpson_integral += (x2 - x1) / 6.0 * (f(x1) + 4.0 * f(0.5 * (x1 + x2)) + f(x2));
 	}
 	return simpson_integral;
@@ -132,7 +134,7 @@ double integral(double (*f)(double), double a, double b, double eps)
 		double s1 = simpson(f, a, b, n);
 		double s2 = simpson(f, a, b, 2 * n);
 		double dif = fabs(s2 - s1) / 3.0;
-		if (dif < eps / 100.0)
+		if (dif < eps / 10)
 		{
 			return s1;
 		}
@@ -158,73 +160,73 @@ int main(int argc, char **argv)
         else if (strcmp(argv[i], "-test-functions") == 0)
         {
             printf("Computing integral of x^2 - 2x - 10 on segment [1; 3] with 0.00001 precision\n");
-            printf("Program result: %f\n", integral(tf1, 1, 3, 0.00001));
+            printf("Program result: %f\n", integral(tf1, 1, 3, EPS));
             printf("Real result: -19.33333\n");
-            if (fabs(integral(tf1, 1, 3, 0.00001) + 19.333333) < 0.00001) printf("OK\n");
+            if (fabs(integral(tf1, 1, 3, EPS) + 19.333333) < 0.00001) printf("OK\n");
             else printf("FAIL\n");
             printf("Computing solution of x^2 - 2x - 10 = 0 on segment [3; 5] with 0.00001 precision\n");
-            printf("Program result: %f\n", root(tf1, tf0, tf1_, tf0_, 3, 5, 0.00001));
+            printf("Program result: %f\n", root(tf1, tf0, tf1_, tf0_, 3, 5, EPS));
             printf("Real result: 4.316624\n");
-            if (fabs(root(tf1, tf0, tf1_, tf0_, 3, 5, 0.00001) - 4.316624) < 0.00001) printf("OK\n");
+            if (fabs(root(tf1, tf0, tf1_, tf0_, 3, 5, EPS) - 4.316624) < 0.00001) printf("OK\n");
             else printf("FAIL\n");
             printf("\n");
 
             printf("Computing integral of 2 * x^30 - 5 * x^24 + 11 * x^3 - 3 * x - 15 on segment [0; 1] with 0.00001 precision\n");
-            printf("Program result: %f\n", integral(tf2, 0, 1, 0.00001));
+            printf("Program result: %f\n", integral(tf2, 0, 1, EPS));
             printf("Real result: -13.885483\n");
-            if (fabs(integral(tf2, 0, 1, 0.00001) + 13.885483) < 0.00001) printf("OK\n");
+            if (fabs(integral(tf2, 0, 1, EPS) + 13.885483) < 0.00001) printf("OK\n");
             else printf("FAIL\n");
             printf("Computing solution of 2 * x^30 - 5 * x^24 + 11 * x^3 - 3 * x - 15 = 0 on segment [1; 2] with 0.00001 precision\n");
-            printf("Program result: %f\n", root(tf2, tf0, tf2_, tf0_, 1, 2, 0.00001));
+            printf("Program result: %f\n", root(tf2, tf0, tf2_, tf0_, 1, 2, EPS));
             printf("Real result: 1.166021\n");
-            if (fabs(root(tf2, tf0, tf2_, tf0_, 1, 2, 0.00001) - 1.166021) < 0.00001) printf("OK\n");
+            if (fabs(root(tf2, tf0, tf2_, tf0_, 1, 2, EPS) - 1.166021) < 0.00001) printf("OK\n");
             else printf("FAIL\n");
             printf("\n");
 
             printf("Computing integral of x^(-4) + x^(-6) + x^(-13) - 1 on segment [3; 4] with 0.00001 precision\n");
-            printf("Program result: %f\n", integral(tf3, 3, 4, 0.00001));
+            printf("Program result: %f\n", integral(tf3, 3, 4, EPS));
             printf("Real result: -0.99223\n");
-            if (fabs(integral(tf3, 3, 4, 0.00001) + 0.99223) < 0.00001) printf("OK\n");
+            if (fabs(integral(tf3, 3, 4, EPS) + 0.99223) < 0.00001) printf("OK\n");
             else printf("FAIL\n");
             printf("Computing solution of x^(-4) + x^(-6) + x^(-13) - 1 = 0 on segment [1; 2] with 0.00001 precision\n");
-            printf("Program result: %f\n", root(tf3, tf0, tf3_, tf0_, 1, 2, 0.00001));
+            printf("Program result: %f\n", root(tf3, tf0, tf3_, tf0_, 1, 2, EPS));
             printf("Real result: 1.180511\n");
-            if (fabs(root(tf3, tf0, tf3_, tf0_, 1, 2, 0.00001) - 1.180511) < 0.00001) printf("OK\n");
+            if (fabs(root(tf3, tf0, tf3_, tf0_, 1, 2, EPS) - 1.180511) < 0.00001) printf("OK\n");
             else printf("FAIL\n");
             printf("\n");
 
             printf("Computing integral of sin(x) - 2 * cos(x) on segment [-1; 1] with 0.00001 precision\n");
-            printf("Program result: %f\n", integral(tf4, -1, 1, 0.00001));
+            printf("Program result: %f\n", integral(tf4, -1, 1, EPS));
             printf("Real result: -3.365884\n");
-            if (fabs(integral(tf4, -1, 1, 0.00001) + 3.365884) < 0.00001) printf("OK\n");
+            if (fabs(integral(tf4, -1, 1, EPS) + 3.365884) < 0.00001) printf("OK\n");
             else printf("FAIL\n");
             printf("Computing solution of sin(x) - 2 * cos(x) = 0 on segment [1; 2] with 0.00001 precision\n");
-            printf("Program result: %f\n", root(tf4, tf0, tf4_, tf0_, 1, 2, 0.00001));
+            printf("Program result: %f\n", root(tf4, tf0, tf4_, tf0_, 1, 2, EPS));
             printf("Real result: 1.107148\n");
-            if (fabs(root(tf4, tf0, tf4_, tf0_, 1, 2, 0.00001) - 1.107148) < 0.00001) printf("OK\n");
+            if (fabs(root(tf4, tf0, tf4_, tf0_, 1, 2, EPS) - 1.107148) < 0.00001) printf("OK\n");
             else printf("FAIL\n");
             printf("\n");
 
             printf("Computing integral of 2^x - 3^x + 1 on segment [2; 5] with 0.00001 precision\n");
-            printf("Program result: %f\n", integral(tf5, 2, 5, 0.00001));
+            printf("Program result: %f\n", integral(tf5, 2, 5, EPS));
             printf("Real result: -169.600517\n");
-            if (fabs(integral(tf5, 2, 5, 0.00001) + 169.600517) < 0.00001) printf("OK\n");
+            if (fabs(integral(tf5, 2, 5, EPS) + 169.600517) < 0.00001) printf("OK\n");
             else printf("FAIL\n");
             printf("Computing solution of 2^x - 3^x + 1 = 0 on segment [0; 2] with 0.00001 precision\n");
-            printf("Program result: %f\n", root(tf5, tf0, tf5_, tf0_, 0, 2, 0.00001));
+            printf("Program result: %f\n", root(tf5, tf0, tf5_, tf0_, 0, 2, EPS));
             printf("Real result: 1\n");
-            if (fabs(root(tf5, tf0, tf5_, tf0_, 0, 2, 0.00001) - 1) < 0.00001) printf("OK\n");
+            if (fabs(root(tf5, tf0, tf5_, tf0_, 0, 2, EPS) - 1) < 0.00001) printf("OK\n");
             else printf("FAIL\n");
             printf("\n");
 
             return 0;
         }
     }
-        double x1 = root(f1, f2, f1_, f2_, 1, 2, 0.00001);
-        double x2 = root(f2, f3, f2_, f3_, 0, 1, 0.00001);
-        double x3 = root(f3, f1, f3_, f1_, -2, -1, 0.000001);
+        double x1 = root(f1, f2, f1_, f2_, 1, 2, EPS);
+        double x2 = root(f2, f3, f2_, f3_, 0, 1, EPS);
+        double x3 = root(f3, f1, f3_, f1_, -2, -1, EPS);
 
-        double S = integral(f1, x3, x1, 0.000001) - integral(f2, x2, x1, 0.000001) - integral(f3, x3, x2, 0.000001);
+        double S = integral(f1, x3, x1, EPS) - integral(f2, x2, x1, EPS) - integral(f3, x3, x2, EPS);
         N = 0;
         printf("square = %f\n\n", S);
         int ff = 1;
@@ -242,9 +244,9 @@ int main(int argc, char **argv)
             if(strcmp("-points", argv[i]) == 0)
             {
                 printf("POINTS\n");
-                printf("f1 and f2    %f\n", root(f1, f2, f1_, f2_, 1, 2, 0.00001));
-                printf("f2 and f3    %f\n", root(f2, f3, f2_, f3_, 0, 1, 0.00001));
-                printf("f3 and f1    %f\n\n", root(f3, f1, f3_, f1_, -2, -1, 0.000001));
+                printf("f1 and f2    %f\n", root(f1, f2, f1_, f2_, 1, 2, EPS));
+                printf("f2 and f3    %f\n", root(f2, f3, f2_, f3_, 0, 1, EPS));
+                printf("f3 and f1    %f\n\n", root(f3, f1, f3_, f1_, -2, -1, EPS));
             }
             else if (strcmp("-v", argv[i]) == 0)
             {
@@ -257,15 +259,15 @@ int main(int argc, char **argv)
             {
                 printf("ITERATIONS\n");
                 N = 0;
-                root(f1, f2, f1_, f2_, 1, 2, 0.00001);
+                root(f1, f2, f1_, f2_, 1, 2, EPS);
                 printf("f1 and f2 iterations = %d\n", N);
 
                 N = 0;
-                root(f2, f3, f2_, f3_, 0, 1, 0.00001);
+                root(f2, f3, f2_, f3_, 0, 1, EPS);
                 printf("f2 and f3 iterations = %d\n", N);
 
                 N = 0;
-                root(f3, f1, f3_, f1_, -2, -1, 0.000001);
+                root(f3, f1, f3_, f1_, -2, -1, EPS);
                 printf("f3 and f1 iterations = %d\n\n", N);
             }
             else if(strcmp("-test-integral", argv[i]) == 0)
