@@ -11,7 +11,65 @@ extern double f2_(double);
 extern double f3_(double);
 int N;
 
-double eps = 1e-10;
+double tf0 (double x)
+{
+    return 0;
+}
+
+double tf0_ (double x)
+{
+    return 0;
+}
+
+double tf1 (double x)
+{
+    return x * x - 2 * x - 10;
+}
+
+double tf1_ (double x)
+{
+    return 2 * x - 2;
+}
+
+double tf2 (double x)
+{
+    return 2 * pow(x, 30) - 5 * pow(x, 24) + 11 * pow(x, 3) - 3 * x - 15;
+}
+
+double tf2_ (double x)
+{
+    return 60 * pow(x, 29) - 120 * pow(x, 23) + 33 * pow(x, 2) - 3;
+}
+
+double tf3 (double x)
+{
+    return pow(x, -4) + pow(x, -6) + pow(x, -13) - 1;
+}
+
+double tf3_ (double x)
+{
+    return -4 * pow(x, -5) - 6 * pow(x, -7) - 13 * pow(x, -14);
+}
+
+double tf4 (double x)
+{
+    return sin(x) - 2 * cos(x);
+}
+
+double tf4_ (double x)
+{
+    return cos(x) + 2 * sin(x);
+}
+
+double tf5 (double x)
+{
+    return pow(2, x) - pow(3, x) + 1;
+}
+
+double tf5_ (double x)
+{
+    return log(2) * pow(2, x) - log(3) * pow(3, x);
+}
 
 void Step(double (*f)(double), double (*g)(double), double (*f_)(double), double (*g_)(double), double *a, double *b)
 {
@@ -73,8 +131,8 @@ double integral(double (*f)(double), double a, double b, double eps)
     {
 		double s1 = simpson(f, a, b, n);
 		double s2 = simpson(f, a, b, 2 * n);
-		double dif = fabs(s2 - s1) / 3.	;
-		if (dif < eps)
+		double dif = fabs(s2 - s1) / 3.0;
+		if (dif < eps / 100.0)
 		{
 			return s1;
 		}
@@ -89,7 +147,76 @@ int main(int argc, char **argv)
         if (strcmp(argv[i], "-help") == 0)
         {
             printf("HELP\n");
-            printf("-points  -  print all intersections\n-iterations  -  print number of interations\n-test-integral  -  User input: number of function(1,2,3), segment [a,b](input a, input b), epsilon; after input print value of this integral\n-test-root  -  User input: number of first function(1,2,3), number of second function(1,2,3), segment [a,b](input a, input b), epsilon; after input print value of root\n\n");
+            printf("-points  -  Print all intersections\n");
+            printf("-iterations  -  Print number of iterations\n");
+            printf("-test-integral  -  User input: number of function(1,2,3), segment [a,b](input a, input b), epsilon; after input print value of this integral\n");
+            printf("-test-root  -  User input: number of first function(1,2,3), number of second function(1,2,3), segment [a,b](input a, input b), epsilon; after input print value of root\n");
+            printf("-v  -  Information about task\n");
+            printf("-test-functions  -  Print integral and intersection with 0 of all testing functions on testing segment\n\n");
+            return 0;
+        }
+        else if (strcmp(argv[i], "-test-functions") == 0)
+        {
+            printf("Computing integral of x^2 - 2x - 10 on segment [1; 3] with 0.00001 precision\n");
+            printf("Program result: %f\n", integral(tf1, 1, 3, 0.00001));
+            printf("Real result: -19.33333\n");
+            if (fabs(integral(tf1, 1, 3, 0.00001) + 19.333333) < 0.00001) printf("OK\n");
+            else printf("FAIL\n");
+            printf("Computing solution of x^2 - 2x - 10 = 0 on segment [3; 5] with 0.00001 precision\n");
+            printf("Program result: %f\n", root(tf1, tf0, tf1_, tf0_, 3, 5, 0.00001));
+            printf("Real result: 4.316624\n");
+            if (fabs(root(tf1, tf0, tf1_, tf0_, 3, 5, 0.00001) - 4.316624) < 0.00001) printf("OK\n");
+            else printf("FAIL\n");
+            printf("\n");
+
+            printf("Computing integral of 2 * x^30 - 5 * x^24 + 11 * x^3 - 3 * x - 15 on segment [0; 1] with 0.00001 precision\n");
+            printf("Program result: %f\n", integral(tf2, 0, 1, 0.00001));
+            printf("Real result: -13.885483\n");
+            if (fabs(integral(tf2, 0, 1, 0.00001) + 13.885483) < 0.00001) printf("OK\n");
+            else printf("FAIL\n");
+            printf("Computing solution of 2 * x^30 - 5 * x^24 + 11 * x^3 - 3 * x - 15 = 0 on segment [1; 2] with 0.00001 precision\n");
+            printf("Program result: %f\n", root(tf2, tf0, tf2_, tf0_, 1, 2, 0.00001));
+            printf("Real result: 1.166021\n");
+            if (fabs(root(tf2, tf0, tf2_, tf0_, 1, 2, 0.00001) - 1.166021) < 0.00001) printf("OK\n");
+            else printf("FAIL\n");
+            printf("\n");
+
+            printf("Computing integral of x^(-4) + x^(-6) + x^(-13) - 1 on segment [3; 4] with 0.00001 precision\n");
+            printf("Program result: %f\n", integral(tf3, 3, 4, 0.00001));
+            printf("Real result: -0.99223\n");
+            if (fabs(integral(tf3, 3, 4, 0.00001) + 0.99223) < 0.00001) printf("OK\n");
+            else printf("FAIL\n");
+            printf("Computing solution of x^(-4) + x^(-6) + x^(-13) - 1 = 0 on segment [1; 2] with 0.00001 precision\n");
+            printf("Program result: %f\n", root(tf3, tf0, tf3_, tf0_, 1, 2, 0.00001));
+            printf("Real result: 1.180511\n");
+            if (fabs(root(tf3, tf0, tf3_, tf0_, 1, 2, 0.00001) - 1.180511) < 0.00001) printf("OK\n");
+            else printf("FAIL\n");
+            printf("\n");
+
+            printf("Computing integral of sin(x) - 2 * cos(x) on segment [-1; 1] with 0.00001 precision\n");
+            printf("Program result: %f\n", integral(tf4, -1, 1, 0.00001));
+            printf("Real result: -3.365884\n");
+            if (fabs(integral(tf4, -1, 1, 0.00001) + 3.365884) < 0.00001) printf("OK\n");
+            else printf("FAIL\n");
+            printf("Computing solution of sin(x) - 2 * cos(x) = 0 on segment [1; 2] with 0.00001 precision\n");
+            printf("Program result: %f\n", root(tf4, tf0, tf4_, tf0_, 1, 2, 0.00001));
+            printf("Real result: 1.107148\n");
+            if (fabs(root(tf4, tf0, tf4_, tf0_, 1, 2, 0.00001) - 1.107148) < 0.00001) printf("OK\n");
+            else printf("FAIL\n");
+            printf("\n");
+
+            printf("Computing integral of 2^x - 3^x + 1 on segment [2; 5] with 0.00001 precision\n");
+            printf("Program result: %f\n", integral(tf5, 2, 5, 0.00001));
+            printf("Real result: -169.600517\n");
+            if (fabs(integral(tf5, 2, 5, 0.00001) + 169.600517) < 0.00001) printf("OK\n");
+            else printf("FAIL\n");
+            printf("Computing solution of 2^x - 3^x + 1 = 0 on segment [0; 2] with 0.00001 precision\n");
+            printf("Program result: %f\n", root(tf5, tf0, tf5_, tf0_, 0, 2, 0.00001));
+            printf("Real result: 1\n");
+            if (fabs(root(tf5, tf0, tf5_, tf0_, 0, 2, 0.00001) - 1) < 0.00001) printf("OK\n");
+            else printf("FAIL\n");
+            printf("\n");
+
             return 0;
         }
     }
@@ -112,18 +239,19 @@ int main(int argc, char **argv)
         dfunc[2] = f3_;
         for (int i = 1; i < argc; ++i)
         {
-            if (strcmp(argv[i], "-help") == 0)
-            {
-                printf("HELP\n");
-                printf("-points  -  print all intersections\n-iterations  -  print number of iterations\n-test-integral  -  User input: number of function {1, 2, 3}, segment [a,b] (input a, input b), epsilon; after input print value of this integral\n-test-root  -  User input: number of first function {1, 2, 3}, number of second function {1, 2, 3}, segment [a,b] (input a, input b), epsilon; after input print value of root\n\n");
-                return 0;
-            }
-            else if(strcmp("-points", argv[i]) == 0)
+            if(strcmp("-points", argv[i]) == 0)
             {
                 printf("POINTS\n");
                 printf("f1 and f2    %f\n", root(f1, f2, f1_, f2_, 1, 2, 0.00001));
                 printf("f2 and f3    %f\n", root(f2, f3, f2_, f3_, 0, 1, 0.00001));
                 printf("f3 and f1    %f\n\n", root(f3, f1, f3_, f1_, -2, -1, 0.000001));
+            }
+            else if (strcmp("-v", argv[i]) == 0)
+            {
+                printf("Task: Finding the area of a figure limited by three functions\n");
+                printf("Solution method: combined method and Simpson`s formula\n");
+                printf("Integrals finding on: f1 [%f;%f], f2 [%f;%f], f3 [%f; %f]\n", x3, x1, x2, x1, x3, x2);
+                printf("Epsilon: 0.001\n");
             }
             else if (strcmp("-iterations", argv[i]) == 0)
             {
