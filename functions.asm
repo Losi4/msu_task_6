@@ -1,13 +1,12 @@
 section .data
-    c1 dq 4.0
-    c2 dq -8.0
-    c3 dq 3.0
-    c4 dq 2.0
-    c5 dq -1.0
+c1 dq 4.0
+c2 dq -8.0
+c3 dq 3.0
+c4 dq 2.0
+c5 dq -1.0
     
 
 section .text
-finit
 
 ; 1 + 4 / (x^2 + 1)
 global f1
@@ -15,6 +14,7 @@ f1:
     push ebp
     mov ebp, esp
     ;
+    finit
     fld qword[c1]
     fld qword[ebp + 8]
     fld qword[ebp + 8]
@@ -34,6 +34,7 @@ f2:
     push ebp
     mov ebp, esp
     ;
+    finit
     fld qword[ebp + 8]
     fld qword[ebp + 8]
     fmulp
@@ -49,6 +50,7 @@ f3:
     push ebp
     mov ebp, esp
     ;
+    finit
     fld1 
     fld qword[ebp + 8]
     fld st0
@@ -72,6 +74,7 @@ f1_:
     push ebp
     mov ebp, esp
     ;
+    finit
     fld qword[c2]
     fld qword[ebp + 8]
     fmulp
@@ -97,6 +100,7 @@ f2_:
     push ebp
     mov ebp, esp
     ;
+    finit
     fld qword[ebp + 8]
     fld qword[ebp + 8]
     fmulp
@@ -112,6 +116,7 @@ f3_:
     push ebp
     mov ebp, esp
     ;
+    finit
     fld1 
     fld qword[ebp + 8]
     fld st0
