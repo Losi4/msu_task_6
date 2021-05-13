@@ -133,10 +133,10 @@ double integral(double (*f)(double), double a, double b, double eps)
     {
 		double s1 = simpson(f, a, b, n);
 		double s2 = simpson(f, a, b, 2 * n);
-		double dif = fabs(s2 - s1) / 3.0;
-		if (dif < eps / 10)
+		double dif = fabs(s2 - s1) / 15.0;
+		if (dif < eps)
 		{
-			return s1;
+			return s2;
 		}
 	}
 	return 0;
