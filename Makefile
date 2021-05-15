@@ -1,6 +1,6 @@
 all: main
 clean:
-	rm main main.o functions.o
+	rm main.o functions.o
 main: main.o functions.o
 	gcc -m32 -o main main.o functions.o
 main.o: main.c
