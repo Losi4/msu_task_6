@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
+double strtod (const char *str, char **endstr);
 
 extern double f1(double);
 extern double f2(double);
@@ -13,14 +15,30 @@ extern double f3_(double);
 int N = 0;
 const double EPS = 1e-5;
 
+int check_double(char *s)
+{
+    int flag = 1, i = 0;
+    while(s[i])
+    {
+        if (s[i] != '-' && s[i] != '.' && !isdigit(s[i]))
+        {
+            flag = 0;
+            printf("!!%c", s[i]);
+            break;
+        }
+        i++;
+    }
+    return flag;
+}
+
 double tf0 (double x)
 {
-    return 0;
+    return x - x;
 }
 
 double tf0_ (double x)
 {
-    return 0;
+    return x - x;
 }
 
 double tf1 (double x)
@@ -150,11 +168,11 @@ int main(int argc, char **argv)
         if (strcmp(argv[i], "-help") == 0)
         {
             printf("HELP\n");
+            printf("-v  -  Information about task\n");
             printf("-points  -  Print all intersections\n");
             printf("-iterations  -  Print number of iterations\n");
-            printf("-test-integral  -  User input: number of function(1,2,3), segment [a,b](input a, input b), epsilon; after input print value of this integral\n");
-            printf("-test-root  -  User input: number of first function(1,2,3), number of second function(1,2,3), segment [a,b](input a, input b), epsilon; after input print value of root\n");
-            printf("-v  -  Information about task\n");
+            printf("-test-integral_{number of function (1,2,3)}_{segment [a,b] input a}_{input b}_{epsilon} (-test-integral 1 0.5 2 0.001)\n");
+            printf("-test-root_{number of first function (1,2,3)}_{number of second function (1,2,3)}_{segment [a,b] input a}_{input b}_{epsilon} (-test-root 1 2 -3 4 0.001)\n");
             printf("-test-functions  -  Print integral and intersection with 0 of all testing functions on testing segment\n\n");
             return 0;
         }
@@ -223,95 +241,170 @@ int main(int argc, char **argv)
             return 0;
         }
     }
-        double x1 = root(f1, f2, f1_, f2_, 1, 2, EPS);
-        double x2 = root(f2, f3, f2_, f3_, 0, 1, EPS);
-        double x3 = root(f3, f1, f3_, f1_, -2, -1, EPS);
+    int right_flag = 0;
+    double x1 = root(f1, f2, f1_, f2_, 1, 2, EPS);
+    double x2 = root(f2, f3, f2_, f3_, 0, 1, EPS);
+    double x3 = root(f3, f1, f3_, f1_, -2, -1, EPS);
 
-        double S = integral(f1, x3, x1, EPS) - integral(f2, x2, x1, EPS) - integral(f3, x3, x2, EPS);
-        N = 0;
-        printf("square = %f\n\n", S);
-        int ff = 1;
-        double a = 1, b = 2, eps = 0.01;
-        double (*func[3])(double);
-        double (*dfunc[3])(double);
-        func[0] = f1;
-        func[1] = f2;
-        func[2] = f3;
-        dfunc[0] = f1_;
-        dfunc[1] = f2_;
-        dfunc[2] = f3_;
-        for (int i = 1; i < argc; ++i)
+    double S = integral(f1, x3, x1, EPS) - integral(f2, x2, x1, EPS) - integral(f3, x3, x2, EPS);
+    N = 0;
+    printf("square = %f\n\n", S);
+    int ff = 1;
+    double a = 1, b = 2, eps = 0.01;
+    double (*func[3])(double);
+    double (*dfunc[3])(double);
+    func[0] = f1;
+    func[1] = f2;
+    func[2] = f3;
+    dfunc[0] = f1_;
+    dfunc[1] = f2_;
+    dfunc[2] = f3_;
+
+    for (int i = 1; i < argc; ++i)
+    {
+        if (strcmp("-v", argv[i]) == 0)
         {
-            if(strcmp("-points", argv[i]) == 0)
-            {
-                printf("POINTS\n");
-                printf("f1 and f2    %f\n", root(f1, f2, f1_, f2_, 1, 2, EPS));
-                printf("f2 and f3    %f\n", root(f2, f3, f2_, f3_, 0, 1, EPS));
-                printf("f3 and f1    %f\n\n", root(f3, f1, f3_, f1_, -2, -1, EPS));
-            }
-            else if (strcmp("-v", argv[i]) == 0)
-            {
-                printf("Task: Finding the area of a figure limited by three functions\n");
-                printf("Solution method: combined method and Simpson`s formula\n");
-                printf("Integrals finding on: f1 [%f;%f], f2 [%f;%f], f3 [%f; %f]\n", x3, x1, x2, x1, x3, x2);
-                printf("Epsilon: 0.001\n");
-            }
-            else if (strcmp("-iterations", argv[i]) == 0)
-            {
-                printf("ITERATIONS\n");
-                N = 0;
-                root(f1, f2, f1_, f2_, 1, 2, EPS);
-                printf("f1 and f2 iterations = %d\n", N);
+            printf("Task: Finding the area of a figure limited by three functions\n");
+            printf("Solution method: combined method and Simpson`s formula\n");
+            printf("Integrals finding on: f1 [%f;%f], f2 [%f;%f], f3 [%f; %f]\n", x3, x1, x2, x1, x3, x2);
+            printf("Epsilon: 0.001\n");
+            right_flag = 1;
+            break;
+        }
+    }
+    for (int i = 1; i < argc; ++i)
+    {
+        if(strcmp("-points", argv[i]) == 0)
+        {
+            printf("POINTS\n");
+            printf("f1 and f2    %f\n", root(f1, f2, f1_, f2_, 1, 2, EPS));
+            printf("f2 and f3    %f\n", root(f2, f3, f2_, f3_, 0, 1, EPS));
+            printf("f3 and f1    %f\n\n", root(f3, f1, f3_, f1_, -2, -1, EPS));
+            right_flag = 1;
+            break;
+        }
+    }
+    for (int i = 1; i < argc; ++i)
+    {
+        if (strcmp("-iterations", argv[i]) == 0)
+        {
+            printf("ITERATIONS\n");
+            N = 0;
+            root(f1, f2, f1_, f2_, 1, 2, EPS);
+            printf("f1 and f2 iterations = %d\n", N);
 
-                N = 0;
-                root(f2, f3, f2_, f3_, 0, 1, EPS);
-                printf("f2 and f3 iterations = %d\n", N);
+            N = 0;
+            root(f2, f3, f2_, f3_, 0, 1, EPS);
+            printf("f2 and f3 iterations = %d\n", N);
 
-                N = 0;
-                root(f3, f1, f3_, f1_, -2, -1, EPS);
-                printf("f3 and f1 iterations = %d\n\n", N);
-            }
-            else if(strcmp("-test-integral", argv[i]) == 0)
+            N = 0;
+            root(f3, f1, f3_, f1_, -2, -1, EPS);
+            printf("f3 and f1 iterations = %d\n\n", N);
+            right_flag = 1;
+            break;
+        }
+    }
+
+    for (int i = 1; i < argc; ++i)
+    {
+        if (strcmp("-test-integral", argv[i]) == 0)
+        {
+            if (argc - i - 1 < 4)
             {
-                printf("number of function = ");
-                scanf("%d", &ff);
-                printf("\n");
-                printf("a = ");scanf("%lf", &a);printf("\n");
-                printf("b = ");scanf("%lf", &b);printf("\n");
-                printf("eps = ");scanf("%lf", &eps);printf("\n");
-                if (ff == 1)
-                {
-                    printf("%f\n", integral(f1, a, b, eps));
-                }
-                else if (ff == 2)
-                {
-                    printf("%f\n", integral(f2, a, b, eps));
-                }
-                else
-                {
-                    printf("%f\n", integral(f3, a, b, eps));
-                }
-                printf("\n");
+                printf("error: too few arguments for -test-integral\n");
+                break;
             }
-            else if (strcmp("-test-root", argv[i]) == 0)
+            if (strcmp("1", argv[i + 1]) && strcmp("2", argv[i + 1]) && strcmp("3", argv[i + 1]))
             {
-                int f1, f2;
-                printf("number of first function = ");scanf("%d", &f1);printf("\n");
-                printf("number of second function = ");scanf("%d", &f2);printf("\n");
-                printf("a = ");scanf("%lf", &a);printf("\n");
-                printf("b = ");scanf("%lf", &b);printf("\n");
-                printf("eps = ");scanf("%lf", &eps);printf("\n");
-                double (*ff1)(double) = func[f1 - 1];
-                double (*ff2)(double) = func[f2 - 1];
-                double (*dff1)(double) = dfunc[f1-1];
-                double (*dff2)(double) = dfunc[f2-1];
-                printf("%f\n", root(ff1, ff2, dff1, dff2, a, b, eps));
-                printf("\n");
+                printf("Invalid first argument for -test-integral\n");
+                break;
+            }
+            ff = argv[i + 1][0] - '0';
+            if (!check_double(argv[i + 2]))
+            {
+                printf("Invalid second argument for -test-integral\n");
+                break;
+            }
+            a = strtod(argv[i + 2], 0);
+            if (!check_double(argv[i + 3]))
+            {
+                printf("Invalid third argument for -test-integral\n");
+                break;
+            }
+            b = strtod(argv[i + 3], 0);
+            if (!check_double(argv[i + 4]))
+            {
+                printf("Invalid fourth argument for -test-integral\n");
+                break;
+            }
+            eps = strtod(argv[i + 4], 0);
+            if (ff == 1)
+            {
+                printf("%f\n", integral(f1, a, b, eps));
+            }
+            else if (ff == 2)
+            {
+                printf("%f\n", integral(f2, a, b, eps));
             }
             else
             {
-                printf("Invalid key\n\n");
+                printf("%f\n", integral(f3, a, b, eps));
             }
+            printf("\n");
+            right_flag = 1;
+            break;
         }
+    }
+    for (int i = 1; i < argc; ++i)
+    {
+        if (strcmp("-test-root", argv[i]) == 0)
+        {
+            if (argc - i - 1 < 5)
+            {
+                printf("error: too few arguments for -test-root\n");
+                break;
+            }
+            int f1, f2;
+            if (strcmp("1", argv[i + 1]) && strcmp("2", argv[i + 1]) && strcmp("3", argv[i + 1]))
+            {
+                printf("Invalid first argument for -test-root\n");
+                break;
+            }
+            f1 = argv[i + 1][0] - '0';
+            if (strcmp("1", argv[i + 2]) && strcmp("2", argv[i + 2]) && strcmp("3", argv[i + 2]))
+            {
+                printf("Invalid second argument for -test-root\n");
+                break;
+            }
+            f2 = argv[i + 2][0] - '0';
+            if (!check_double(argv[i + 3]))
+            {
+                printf("Invalid third argument for -test-root\n");
+                break;
+            }
+            a = strtod(argv[i + 3], 0);
+            if (!check_double(argv[i + 4]))
+            {
+                printf("Invalid fourth argument for -test-root\n");
+                break;
+            }
+            b = strtod(argv[i + 4], 0);
+            if (!check_double(argv[i + 5]))
+            {
+                printf("Invalid fifth argument for -test-root\n");
+                break;
+            }
+            eps = strtod(argv[i + 5], 0);
+            double (*ff1)(double) = func[f1 - 1];
+            double (*ff2)(double) = func[f2 - 1];
+            double (*dff1)(double) = dfunc[f1-1];
+            double (*dff2)(double) = dfunc[f2-1];
+            printf("%f\n", root(ff1, ff2, dff1, dff2, a, b, eps));
+            printf("\n");
+            right_flag = 1;
+            break;
+        }
+    }
+    if (!right_flag) printf("Invalid key\n\n");
 	return 0;
 }
