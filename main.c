@@ -258,41 +258,36 @@ int main(int argc, char **argv)
             if (argc - i - 1 < 4)
             {
                 printf("error: too few arguments for -test-integral\n");
-                break;
+                return 0;
             }
             if (strcmp("1", argv[i + 1]) && strcmp("2", argv[i + 1]) && strcmp("3", argv[i + 1]))
             {
                 printf("Invalid first argument for -test-integral\n");
-                break;
+                return 0;
             }
             ff = argv[i + 1][0] - '0';
             if (!check_double(argv[i + 2]))
             {
                 printf("Invalid second argument for -test-integral\n");
-                break;
+                return 0;
             }
             a = strtod(argv[i + 2], 0);
             if (!check_double(argv[i + 3]))
             {
                 printf("Invalid third argument for -test-integral\n");
-                break;
+                return 0;
             }
             b = strtod(argv[i + 3], 0);
-            if (a > b)
-            {
-                printf("Error: The left border of the segment must be less or equal than the right (a <= b)\n");
-                break;
-            }
             if (!check_double(argv[i + 4]))
             {
                 printf("Invalid fourth argument for -test-integral\n");
-                break;
+                return 0;
             }
             eps = strtod(argv[i + 4], 0);
-            if (eps < 0)
+            if (eps <= 0)
             {
                 printf("Error: epsilon should be positive (eps > 0)\n");
-                break;
+                return 0;
             }
             if (ff == 1)
             {
@@ -317,48 +312,48 @@ int main(int argc, char **argv)
             if (argc - i - 1 < 5)
             {
                 printf("error: too few arguments for -test-root\n");
-                break;
+                return 0;
             }
             int f1, f2;
             if (strcmp("1", argv[i + 1]) && strcmp("2", argv[i + 1]) && strcmp("3", argv[i + 1]))
             {
                 printf("Invalid first argument for -test-root\n");
-                break;
+                return 0;
             }
             f1 = argv[i + 1][0] - '0';
             if (strcmp("1", argv[i + 2]) && strcmp("2", argv[i + 2]) && strcmp("3", argv[i + 2]))
             {
                 printf("Invalid second argument for -test-root\n");
-                break;
+                return 0;
             }
             f2 = argv[i + 2][0] - '0';
             if (!check_double(argv[i + 3]))
             {
                 printf("Invalid third argument for -test-root\n");
-                break;
+                return 0;
             }
             a = strtod(argv[i + 3], 0);
             if (!check_double(argv[i + 4]))
             {
                 printf("Invalid fourth argument for -test-root\n");
-                break;
+                return 0;
             }
             b = strtod(argv[i + 4], 0);
             if (a > b)
             {
                 printf("Error: The left border of the segment must be less or equal than the right (a <= b)\n");
-                break;
+                return 0;
             }
             if (!check_double(argv[i + 5]))
             {
                 printf("Invalid fifth argument for -test-root\n");
-                break;
+                return 0;
             }
             eps = strtod(argv[i + 5], 0);
-            if (eps < 0)
+            if (eps <= 0)
             {
                 printf("Error: epsilon should be positive (eps > 0)\n");
-                break;
+                return 0;
             }
             double (*ff1)(double) = func[f1 - 1];
             double (*ff2)(double) = func[f2 - 1];
