@@ -405,6 +405,6 @@ int main(int argc, char **argv)
             break;
         }
     }
-    if (!right_flag) printf("Invalid key\n\n");
+    if (!right_flag && argc > 1) printf("Invalid key\n\n");
 	return 0;
 }
