@@ -4,7 +4,7 @@ c2 dq -8.0
 c3 dq 3.0
 c4 dq 2.0
 c5 dq -1.0
-    
+
 
 section .text
 
@@ -43,7 +43,7 @@ f2:
     ;
     leave
     ret
- 
+
 ; 2 ^ (-x)
 global f3
 f3:
@@ -51,7 +51,7 @@ f3:
     mov ebp, esp
     ;
     finit
-    fld1 
+    fld1
     fld qword[ebp + 8]
     fld st0
     frndint
@@ -117,7 +117,7 @@ f3_:
     mov ebp, esp
     ;
     finit
-    fld1 
+    fld1
     fld qword[ebp + 8]
     fld st0
     frndint
