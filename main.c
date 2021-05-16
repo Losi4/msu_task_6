@@ -241,6 +241,16 @@ int main(int argc, char **argv)
             return 0;
         }
     }
+    int ff = 1;
+    double a = 1, b = 2, eps = 0.01;
+    double (*func[3])(double);
+    double (*dfunc[3])(double);
+    func[0] = f1;
+    func[1] = f2;
+    func[2] = f3;
+    dfunc[0] = f1_;
+    dfunc[1] = f2_;
+    dfunc[2] = f3_;
     for (int i = 1; i < argc; ++i)
     {
         if (strcmp("-test-integral", argv[i]) == 0)
@@ -367,17 +377,6 @@ int main(int argc, char **argv)
     double S = integral(f1, x3, x1, EPS) - integral(f2, x2, x1, EPS) - integral(f3, x3, x2, EPS);
     N = 0;
     printf("square = %f\n\n", S);
-    int ff = 1;
-    double a = 1, b = 2, eps = 0.01;
-    double (*func[3])(double);
-    double (*dfunc[3])(double);
-    func[0] = f1;
-    func[1] = f2;
-    func[2] = f3;
-    dfunc[0] = f1_;
-    dfunc[1] = f2_;
-    dfunc[2] = f3_;
-
     for (int i = 1; i < argc; ++i)
     {
         if (strcmp("-v", argv[i]) == 0)
